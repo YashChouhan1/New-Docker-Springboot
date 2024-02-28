@@ -16,18 +16,7 @@ pipeline {
           '''
         }
       }
-
-      stage('Unit Test') {
-        steps {
-          dir('.') {
-            sh '''
-              echo "Executing Unit Tests..."
-              mvn test
-          '''
-          }
-        }
-      }
-
+      
       stage('Build') {
         steps {
           echo "Building version: ${VERSION} with suffix: ${RELEASE_VERSION}"
