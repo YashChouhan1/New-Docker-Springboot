@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    
+    parameters {
+        string(name: 'DOCKER_HUB_USER', defaultValue: '', description: 'Insert docker hub username')
+        string(name: 'DOCKER_HUB_PASSWORD', defaultValue: '', description: 'Insert docker hub password')
+    }
 
     stages {
         stage('Checkout') {
@@ -27,64 +32,32 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            environment {
-                DOCKER_HUB_USER = credentials('DOCKER_HUB_USER_ID')
-                DOCKER_HUB_PASSWORD = credentials('DOCKER_HUB_PASSWORD_ID')
-            }
-            steps {
-                script {
-                    echo "In Deploy Stage"
-                    
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_USER, DOCKER_HUB_PASSWORD) {
-                        echo "Build number: $BUILD_NUMBER"
-
-                        echo "creating backend image"
-                        docker build -f ./Dockerfile -t yashchouhan/backend:$BUILD_NUMBER .
-
-                        echo "creating frontend image"
-                        docker build -f ./Dockerfile-frontend -t yashchouhan/frontend:$BUILD_NUMBER .
-
-                        echo "current images -"
-                        docker images
-
-                        echo "pushing backend image"
-                        docker push yashchouhan/backend:$BUILD_NUMBER
-
-                        echo "pushing frontend image"
-                        docker push yashchouhan/frontend:$BUILD_NUMBER
-                    }
-                }
-            }
-        }
-
         
-        // stage('Deploy') {
-        //     steps {
-        //         // Deploy your application to a target environment (e.g., staging, production)
-        //         sh '''
-        //             echo "In Deploy Stage"
+        stage('Deploy') {
+            steps {
+                // Deploy your application to a target environment (e.g., staging, production)
+                sh 'echo "In Deploy Stage"'
 
-        //             docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD                       
-        //             echo "Build number: $BUILD_NUMBER"
+                sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"                  
+                
+                echo "Build number: $BUILD_NUMBER"
+                echo "3"
+                echo "creating backend image"
+                sh 'docker build -f ./Dockerfile -t yashchouhan/backend-v1:$BUILD_NUMBER .'
+                echo "4"
+                echo "creating frontend image"
+                sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-v1:$BUILD_NUMBER .'
 
-        //             echo "creating backend image"
-        //             docker build -f ./Dockerfile -t yashchouhan/backend:$BUILD_NUMBER .
+                echo "current images -"
+                sh 'docker images'
 
-        //             echo "creating frontend image"
-        //             docker build -f ./Dockerfile-frontend -t yashchouhan/frontend:$BUILD_NUMBER .
+                echo "pushing backend image"
+                sh 'docker push yashchouhan/backend-v1:$BUILD_NUMBER'
 
-        //             echo "current images -"
-        //             docker images
-
-        //             echo "pushing backend image"
-        //             docker push yashchouhan/backend:$BUILD_NUMBER
-
-        //             echo "creating frontend image"
-        //             docker push yashchouhan/frontend:$BUILD_NUMBER
-        //         '''
-        //     }
-        // }
+                echo "pushing frontend image"
+                sh 'docker push yashchouhan/frontend-v1:$BUILD_NUMBER'
+            }
+        }   
     }
 
     post {
