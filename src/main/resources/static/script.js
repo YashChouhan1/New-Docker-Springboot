@@ -4,7 +4,7 @@ const dataContainer = document.getElementById('dataContainer');
 fetchButton.addEventListener('click', fetchData);
 
 function fetchData() {
-    fetch('http://backend:8080/all')
+    fetch('http://localhost:9000/all')
         .then(response => response.json())
         .then(data => {
             displayData(data);
@@ -17,7 +17,7 @@ function fetchData() {
 function displayData(data) {
     let output = '';
     data.forEach(item => {
-        output += `<div>ID: ${item.id}, Name: ${item.name}</div>`;
+        output += `<div>ID: ${item.id}, Name: ${item.name}, Email: ${item.email}</div>`;
     });
     dataContainer.innerHTML = output;
 }
