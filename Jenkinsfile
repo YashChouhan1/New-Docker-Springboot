@@ -60,7 +60,7 @@ pipeline {
             }
         } 
         
-        stage('Running'){
+        stage('Release'){
             steps {
                 // Update docker-compose.yml with new image tags
                 sh "sed -i 's/yashchouhan\\/backend-nv1:latest/yashchouhan\\/backend-nv1:$BUILD_NUMBER/' docker-compose.yml"
