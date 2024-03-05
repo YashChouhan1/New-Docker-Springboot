@@ -75,20 +75,10 @@ pipeline {
         success {
             // Actions to perform when the pipeline succeeds
             echo 'Pipeline succeeded!'
-            emailext (
-                subject: "Build Success",
-                body: "Your build succeeded.",
-                to: "yashcdgi@gmail.com"
-            )
         }
         failure {
             // Actions to perform when the pipeline fails
             echo 'Pipeline failed!'
-            emailext (
-                subject: "Build Failed",
-                body: "Your build failed.",
-                to: "yashcdgi@gmail.com"
-            )
         }
     }
 }
