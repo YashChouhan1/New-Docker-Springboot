@@ -7,14 +7,21 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
+        stage('Checkout') {
             steps {
                 script {
-                    // Clean up workspace
-                    deleteDir()
+                    // Clone the Git repository's master branch
+                    def gitRepoUrl = 'https://github.com/YashChouhan1/New-Docker-Springboot.git'
+
+                    checkout([$class: 'GitSCM', 
+                        branches: [[name: '*/master']], 
+                        userRemoteConfigs: [[url: gitRepoUrl]], 
+                        extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+                    ])
                 }
             }
-        }        
+        }
+
 
         stage('Build') {
             steps {
@@ -34,21 +41,21 @@ pipeline {
 
                 //sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
                 
-                echo "Build number: $BUILD_NUMBER"
+                // echo "Build number: $BUILD_NUMBER"
             
-                echo "creating backend image"
-                //sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
+                // echo "creating backend image"
+                // //sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
             
-                echo "creating frontend image"
-                //sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
+                // echo "creating frontend image"
+                // //sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
 
-                echo "current images -"
-                sh 'docker images'
+                // echo "current images -"
+                // sh 'docker images'
 
-                echo "pushing backend image"
-                //sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+                // echo "pushing backend image"
+                // //sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
 
-                echo "pushing frontend image"
+                // echo "pushing frontend image"
                 //sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
             }
         } 
