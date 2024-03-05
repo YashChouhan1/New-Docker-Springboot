@@ -4,9 +4,7 @@ services:
   frontend:
     links:
       - backend
-    build:
-      context: .
-      dockerfile: Dockerfile-frontend
+    image: yashchouhan/frontend-nv1:latest    
     container_name: frontend
     restart: always    
     ports:
@@ -17,11 +15,11 @@ services:
   backend:
     links:
       - mysqldb
-    build: .
+    image: yashchouhan/backend-nv1:latest
     container_name: backend
     restart: always
     ports:
-      - "8080:8080"
+      - "9000:8080"
     networks:
       - application-net
     environment:
