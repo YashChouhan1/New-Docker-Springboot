@@ -45,8 +45,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=yash
       - MYSQL_DATABASE=test
-    volumes:
-      - ./mysql_data3:/var/lib/mysql
        
       
 networks:
