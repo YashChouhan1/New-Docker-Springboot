@@ -14,7 +14,7 @@ pipeline {
                     def gitRepoUrl = 'https://github.com/YashChouhan1/New-Docker-Springboot.git'
 
                     checkout([$class: 'GitSCM', 
-                        branches: [[name: '*/master']], 
+                        branches: [[name: '*/new-master']], 
                         userRemoteConfigs: [[url: gitRepoUrl]], 
                         extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
                     ])
