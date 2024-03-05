@@ -62,7 +62,7 @@ pipeline {
         
         stage('Running'){
             steps {
-                sh 'sudo docker-compose up'
+                sh 'docker-compose up'
             }
         }
 
