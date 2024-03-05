@@ -39,24 +39,24 @@ pipeline {
                 // Deploy your application to a target environment (e.g., staging, production)
                 sh 'echo "In Deploy Stage"'
 
-                //sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
+                sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
                 
-                // echo "Build number: $BUILD_NUMBER"
+                echo "Build number: $BUILD_NUMBER"
             
-                // echo "creating backend image"
-                // //sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
+                echo "creating backend image"
+                sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
             
-                // echo "creating frontend image"
-                // //sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
+                echo "creating frontend image"
+                sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
 
-                // echo "current images -"
-                // sh 'docker images'
+                echo "current images -"
+                sh 'docker images'
 
-                // echo "pushing backend image"
-                // //sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+                echo "pushing backend image"
+                sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
 
-                // echo "pushing frontend image"
-                //sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
+                echo "pushing frontend image"
+                sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
             }
         } 
         
@@ -65,7 +65,6 @@ pipeline {
                 sh 'docker-compose up'
             }
         }
-
     }
 
     post {
