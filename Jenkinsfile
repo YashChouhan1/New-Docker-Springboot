@@ -62,7 +62,11 @@ pipeline {
         
         stage('Running'){
             steps {
-                sh 'docker-compose up -d'
+                // Update docker-compose.yml with new image tags
+                sh "sed -i 's/yashchouhan\\/backend-nv1:latest/yashchouhan\\/backend-nv1:$BUILD_NUMBER/' docker-compose.yml"
+                sh "sed -i 's/yashchouhan\\/frontend-nv1:latest/yashchouhan\\/frontend-nv1:$BUILD_NUMBER/' docker-compose.yml"
+
+                sh 'docker-compose -f docker-compose.yml up'
             }
         }
     }
