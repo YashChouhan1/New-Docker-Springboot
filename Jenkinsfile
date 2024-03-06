@@ -72,6 +72,8 @@ pipeline {
         stage('Commit and Push') {
             steps {
                 script {
+                    sh 'git config --global user.email "yashchouhan2610@gmail.com"'
+                    sh 'git config --global user.name "Yash Chouhan"'
                     // Add all changes to the index
                     sh "git add docker-compose.yml"
                     
