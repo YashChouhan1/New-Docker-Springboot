@@ -81,7 +81,7 @@ pipeline {
                     sh "git commit -m 'change the image tag'"
 
                     sh "git branch"
-                    
+                    sh "git checkout new-master"
                     // Push the changes to the remote repository
                     sh "git push origin new-master"
                 }
