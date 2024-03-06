@@ -79,6 +79,8 @@ pipeline {
                     
                     // Commit the changes with a message
                     sh "git commit -m 'change the image tag'"
+
+                    sh "git branch"
                     
                     // Push the changes to the remote repository
                     sh "git push origin new-master"
