@@ -1,8 +1,10 @@
 pipeline {
     agent any
+    
     environment {
         GIT_CREDS = credentials('Github')
     }
+    
     parameters {
         string(name: 'DOCKER_HUB_USER', defaultValue: 'yashchouhan', description: 'Insert docker hub username')
         string(name: 'DOCKER_HUB_PASSWORD', defaultValue: '', description: 'Insert docker hub password')
@@ -12,6 +14,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
+                    sh "echo 'In checkout stage'"
+
                     // Clone the Git repository's master branch
                     def gitRepoUrl = 'https://github.com/YashChouhan1/New-Docker-Springboot.git'
 
@@ -39,50 +43,55 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Deploy your application to a target environment (e.g., staging, production)
-                sh 'echo "In Deploy Stage"'
-
-                // sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
+                sh "echo 'In deploy stage'"
                 
-                // echo "Build number: $BUILD_NUMBER"
+                sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
+                
+                echo "Build number: $BUILD_NUMBER"
             
-                // echo "creating backend image"
-                // sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
+                echo "creating backend image"
+                sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
             
-                // echo "creating frontend image"
-                // sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
+                echo "creating frontend image"
+                sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
 
-                // echo "current images -"
-                // sh 'docker images'
+                echo "current images -"
+                sh 'docker images'
 
-                // echo "pushing backend image"
-                // sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+                echo "pushing backend image"
+                sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
 
-                // echo "pushing frontend image"
-                // sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
+                echo "pushing frontend image"
+                sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
             }
         } 
         
         stage('Release'){
             steps {
                 // Update docker-compose.yml with new image tags
+                sh "echo 'In release stage'" 
+                
                 sh "sed -i 's/yashchouhan\\/backend-nv1:[^ ]*/yashchouhan\\/backend-nv1:$BUILD_NUMBER/' docker-compose.yml"
                 sh "sed -i 's/yashchouhan\\/frontend-nv1:[^ ]*/yashchouhan\\/frontend-nv1:$BUILD_NUMBER/' docker-compose.yml"
 
-               // sh 'docker-compose -f docker-compose.yml up -d'
+                sh 'docker-compose -f docker-compose.yml up -d'
             }
         }
+        
         stage('Commit and Push') {
             steps {
                 script {
+
+                    sh "echo 'In Commit and Push stage'"
+                    
                     sh 'git config --global user.email "yashchouhan2610@gmail.com"'
                     sh 'git config --global user.name "Yash Chouhan"'
                     // Add all changes to the index
                     sh "git add docker-compose.yml"
                     
                     // Commit the changes with a message
-                    sh "git commit -m 'change the image tag'"
+                    sh "git commit -m 'auto-commit latest image pushed via ci/cd'"
 
-                    sh "git branch"
                     // Push the changes to the remote repository
                     sh "git push https://$GIT_CREDS@github.com/YashChouhan1/New-Docker-Springboot.git HEAD:new-master"
                 }
