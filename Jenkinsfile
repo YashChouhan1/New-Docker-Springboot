@@ -69,6 +69,20 @@ pipeline {
                 sh 'docker-compose -f docker-compose.yml up -d'
             }
         }
+        stage('Commit and Push') {
+            steps {
+                script {
+                    // Add all changes to the index
+                    sh "git add docker-compose.yml"
+                    
+                    // Commit the changes with a message
+                    sh "git commit -m 'change the image tag'"
+                    
+                    // Push the changes to the remote repository
+                    sh "git push origin new-master"
+                }
+            }
+        }
     }
 
     post {
