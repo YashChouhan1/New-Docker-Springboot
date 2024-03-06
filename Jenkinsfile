@@ -1,6 +1,8 @@
 pipeline {
     agent any
-    
+    environment {
+        GIT_CREDS = credentials('Github')
+    }
     parameters {
         string(name: 'DOCKER_HUB_USER', defaultValue: 'yashchouhan', description: 'Insert docker hub username')
         string(name: 'DOCKER_HUB_PASSWORD', defaultValue: '', description: 'Insert docker hub password')
@@ -81,9 +83,8 @@ pipeline {
                     sh "git commit -m 'change the image tag'"
 
                     sh "git branch"
-                    sh "git checkout new-master"
                     // Push the changes to the remote repository
-                    sh "git push origin new-master"
+                    sh "git push https://$GIT_CREDS@github.com/YashChouhan1/New-Docker-Springboot.git HEAD:new-master"
                 }
             }
         }
