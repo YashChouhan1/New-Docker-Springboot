@@ -28,9 +28,17 @@ pipeline {
             steps {
                 // Build your application here (e.g., compile, package, etc.)
                 sh '''
-                ls
+                     ls
+		'''
                 echo "In Build Stage"
-                '''
+
+		echo "Build number: $BUILD_NUMBER"
+
+		echo "creating backend image"
+		sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
+
+		echo "creating frontend image"
+		sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'	
             }
         }
 
@@ -44,15 +52,7 @@ pipeline {
 				sh "echo 'In deploy stage'"
 	
 				echo 'Docker login succeeded!'
-	
-				echo "Build number: $BUILD_NUMBER"
-	
-				echo "creating backend image"
-				sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
-	
-				echo "creating frontend image"
-				sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
-	
+				
 				echo "current images -"
 				sh 'docker images'
 	
