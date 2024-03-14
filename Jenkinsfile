@@ -37,34 +37,33 @@ pipeline {
         
         stage('Deploy') {
             steps {
-				withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+		withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                     script {
                         def loginStatus = sh(script: "docker login -u $USER -p $PASS", returnStatus: true)
                         if (loginStatus == 0) {					        
-							sh "echo 'In deploy stage'"
-
-                            echo 'Docker login succeeded!'
-
-							echo "Build number: $BUILD_NUMBER"
-            
-							echo "creating backend image"
-							sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
-
-							echo "creating frontend image"
-							sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
-
-							echo "current images -"
-							sh 'docker images'
-
-							echo "pushing backend image"
-							sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
-
-							echo "pushing frontend image"
-							sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
-
+				sh "echo 'In deploy stage'"
+	
+				echo 'Docker login succeeded!'
+	
+				echo "Build number: $BUILD_NUMBER"
+	
+				echo "creating backend image"
+				sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
+	
+				echo "creating frontend image"
+				sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
+	
+				echo "current images -"
+				sh 'docker images'
+	
+				echo "pushing backend image"
+				sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+	
+				echo "pushing frontend image"
+				sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
                         } else {						
-							sh "echo 'In deploy stage'"							
-                            error 'Docker login failed!'
+			        sh "echo 'In deploy stage'"							
+	                        error 'Docker login failed!'
                         }
                     }
                 }
