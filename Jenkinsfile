@@ -42,27 +42,37 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                // Deploy your application to a target environment (e.g., staging, production)
-                sh "echo 'In deploy stage'"
-                
-                sh "docker login -u ${params.DOCKER_HUB_USER} -p ${params.DOCKER_HUB_PASSWORD}"        
-                
-                echo "Build number: $BUILD_NUMBER"
+				withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    script {
+                        def loginStatus = sh(script: "docker login -u $USER -p $PASS", returnStatus: true)
+                        if (loginStatus == 0) {					        
+							sh "echo 'In deploy stage'"
+
+                            echo 'Docker login succeeded!'
+
+							echo "Build number: $BUILD_NUMBER"
             
-                echo "creating backend image"
-                sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
-            
-                echo "creating frontend image"
-                sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
+							echo "creating backend image"
+							sh 'docker build -f ./Dockerfile -t yashchouhan/backend-nv1:$BUILD_NUMBER .'
 
-                echo "current images -"
-                sh 'docker images'
+							echo "creating frontend image"
+							sh 'docker build -f ./Dockerfile-frontend -t yashchouhan/frontend-nv1:$BUILD_NUMBER .'
 
-                echo "pushing backend image"
-                sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+							echo "current images -"
+							sh 'docker images'
 
-                echo "pushing frontend image"
-                sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
+							echo "pushing backend image"
+							sh 'docker push yashchouhan/backend-nv1:$BUILD_NUMBER'
+
+							echo "pushing frontend image"
+							sh 'docker push yashchouhan/frontend-nv1:$BUILD_NUMBER'
+
+                        } else {						
+							sh "echo 'In deploy stage'"							
+                            error 'Docker login failed!'
+                        }
+                    }
+                }
             }
         } 
         
