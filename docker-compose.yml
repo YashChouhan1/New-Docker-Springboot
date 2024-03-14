@@ -4,7 +4,7 @@ services:
   frontend:
     links:
       - backend
-    image: yashchouhan/frontend-nv1:47    
+    image: yashchouhan/frontend-nv1:55    
     container_name: frontend
     restart: always    
     ports:
@@ -15,7 +15,7 @@ services:
   backend:
     links:
       - mysqldb
-    image: yashchouhan/backend-nv1:47
+    image: yashchouhan/backend-nv1:55
     container_name: backend
     restart: always
     ports:
