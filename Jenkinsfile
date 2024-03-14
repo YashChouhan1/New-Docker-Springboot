@@ -4,11 +4,6 @@ pipeline {
     environment {
         GIT_CREDS = credentials('Github')
     }
-    
-    parameters {
-        string(name: 'DOCKER_HUB_USER', defaultValue: 'yashchouhan', description: 'Insert docker hub username')
-        string(name: 'DOCKER_HUB_PASSWORD', defaultValue: '', description: 'Insert docker hub password')
-    }
 
     stages {
         stage('Checkout') {
