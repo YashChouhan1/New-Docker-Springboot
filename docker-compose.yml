@@ -24,12 +24,6 @@ services:
       - "9000:8080"
     networks:
       - application-net
-    environment:
-      SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mysql://mysqldb:3306/test?useSSL=false",        
-        "spring.datasource.username" : "root",
-        "spring.datasource.password" : "yash"
-        }'
             
   mysqldb:
     image: mysql:5.7
