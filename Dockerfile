@@ -1,13 +1,9 @@
-FROM maven:3.8.3-openjdk-17
+FROM openjdk:17
 
-COPY Backend/src /home/app/src
+ARG JAR_FILE=target/*.jar
 
-COPY Backend/pom.xml /home/app
-
-RUN mvn -f /home/app/pom.xml clean package
+COPY ${JAR_FILE} app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/home/app/target/spring_rest_docker.jar"]
-
-
+ENTRYPOINT ["java","-jar","/app.jar"]
