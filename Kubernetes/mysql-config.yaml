@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysqldb-config
+data:
+  MYSQL_ROOT_PASSWORD: yash
+  MYSQL_DATABASE: test
